@@ -2,7 +2,7 @@ import {ethers, providers} from "ethers";
 import Onboard from "bnc-onboard";
 
 type Contracts = {
-    networkId: number;
+    networkId: string;
     init: (networkId: number) => void;
     connect: (address: string) => void;
 }
@@ -23,24 +23,26 @@ type Contracts = {
 // }
 
 // head to blocknative.com to create a key
-const BLOCKNATIVE_KEY: string = 'blocknative-api-key';
+const BLOCKNATIVE_KEY: string = "9b4abb26-ed55-4f5b-a94b-c0b1a63a9fb8";
 
 // the network id that your dapp runs on
-const NETWORK_ID: number = 1;
+const NETWORK_ID = 1;
 
-type OnboardType = () => void;
 // initialize onboard
-const onboard = Onboard({
+export const onboard = Onboard({
   dappId: BLOCKNATIVE_KEY,
   networkId: NETWORK_ID,
   subscriptions: {
     wallet: wallet => {
-      // instantiate web3 when the user has selected a wallet
-      web3 = new (wallet.provider)
+        if (wallet.provider) {
+            wallet = wallet;
+        }
       console.log(`${wallet.name} connected!`)
     }
   }
 })
+
+
 
 // Prompt user to select a wallet
 // await onboard.walletSelect()
