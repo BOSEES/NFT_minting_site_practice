@@ -1,28 +1,25 @@
 import {ethers, providers} from "ethers";
 import Onboard from "bnc-onboard";
 
-type Contracts = {
-    networkId: string;
-    init: (networkId: number) => void;
-    connect: (address: string) => void;
-}
+declare var window: any
 
-// export const contracts: Contract = {
-//     networkId: null,
-//     wallet: null,
-//     signers: {},
-//     init(networkId) {
-//         if (networkId) {
-//             this.networkId = networkId;
-//         } else {
-//             return false;
-//         }
+const provider = new ethers.providers.Web3Provider(
+  window.ethereum,
+  "any"
+);
+provider.send("eth_requestAccount", []);
+const signer = provider.getSigner();
 
-//         this.provider = new providers.JsonRpcProvider("rpcUrl", networkId);
-//     }
+export let userAddress = signer.getAddress();
+export let blockNumber = provider.getBlockNumber();
+
+
+// type Contracts = {
+//     networkId: string;
+//     init: (networkId: number) => void;
+//     connect: (address: string) => void;
 // }
 
-// head to blocknative.com to create a key
 const BLOCKNATIVE_KEY: string = "9b4abb26-ed55-4f5b-a94b-c0b1a63a9fb8";
 
 // the network id that your dapp runs on
@@ -36,8 +33,15 @@ export const onboard = Onboard({
     wallet: wallet => {
         if (wallet.provider) {
             wallet = wallet;
+            console.log();
         }
       console.log(`${wallet.name} connected!`)
+    },
+    address: address => {
+      console.log(address);
+    },
+    network: network => {
+      console.log(network);
     }
   }
 })
@@ -45,7 +49,7 @@ export const onboard = Onboard({
 
 
 // Prompt user to select a wallet
-// await onboard.walletSelect()
 
 // Run wallet checks to make sure that user is ready to transact
+// await onboard.walletSelect()
 // await onboard.walletCheck()
